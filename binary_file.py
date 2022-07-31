@@ -34,3 +34,27 @@ class BinaryFile:
         second = self.read_int(2)
 
         return datetime(year, month, day, hour, minute, second)
+
+    def write_bytes(self, source: bytes) -> int:
+        return self._io.write(source)
+    
+    def write_int(self, number: int, size: int = 4) -> int:
+        serialized_number = number.to_bytes(size, 'little')
+        return self.write_bytes(serialized_number)
+    
+    def write_char(self, string: str, size: int) -> int:
+        assert len(string) > size
+        char = string.ljust(size, "\0").encode("ascii")
+        return self.write_bytes(char)
+    
+    def write_datetime(self, source: datetime) -> int:
+        result = 0
+
+        self.write_int(source.year, 2)
+        self.write_int(source.month, 2)
+        self.write_int(source.day, 2)
+        self.write_int(source.hour, 2)
+        self.write_int(source.minute, 2)
+        self.write_int(source.second, 2)
+
+        return result
