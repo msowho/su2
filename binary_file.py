@@ -19,11 +19,11 @@ class BinaryFile:
     def read_bytes(self, size: int):
         return self._io.read(size)
 
-    def read_int(self, size: int = 4, big: bool = False):
-        return int.from_bytes(self.read_bytes(size), 'little' if not bool else 'big')
+    def read_int(self, size: int = 4, signed: bool = True):
+        return int.from_bytes(self.read_bytes(size), 'little', signed=signed)
     
     def read_char(self, size: int):
-        return self.read_bytes(size).replace("\0", "").decode('ascii')
+        return self.read_bytes(size).replace(b"\x00", b"").decode('ascii')
     
     def read_datetime(self):
         year = self.read_int(2)
